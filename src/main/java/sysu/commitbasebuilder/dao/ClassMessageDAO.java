@@ -96,10 +96,17 @@ public class ClassMessageDAO {
 		
 	}
 	
-	public synchronized static int getClassMaxId() {
+	public static int getClassMaxId() {
 		MongoCollection<Document> classMaxIDCollection = ConnectionFactory.getClassMaxId();
 		Document doc = classMaxIDCollection.find().first();
-		Integer maxId = doc.getInteger("maxid")+1;
+		int maxId;
+		if(doc.get("maxid") instanceof Double) {
+			double id = doc.getDouble("maxid");
+			maxId = (int)id;
+		}else {
+			maxId = doc.getInteger("maxid");
+		}
+		maxId++;
 		doc.put("maxid", maxId);
 		classMaxIDCollection.findOneAndReplace(new Document(),doc);
 		return maxId;

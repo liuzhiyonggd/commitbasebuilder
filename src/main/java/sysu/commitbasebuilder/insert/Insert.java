@@ -10,11 +10,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.BlockComment;
@@ -76,18 +74,7 @@ public class Insert {
 		}
 
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
-		ASTParser oldParser = ASTParser.newParser(AST.JLS4);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		Map<String, String> options = JavaCore.getOptions();
-		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_7);
-		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_7);
-		String[] sources = {};
-		String[] classPaths = {};
-		parser.setEnvironment(classPaths, sources, null, true);
-		parser.setResolveBindings(false);
-		parser.setCompilerOptions(options);
-		parser.setStatementsRecovery(true);
+		
 		Tokenizer2 ntk = null, otk = null;
 		List<CodeComment> newCommentList = null;
 		List<CodeComment> oldCommentList = null;
@@ -150,11 +137,7 @@ public class Insert {
 		classMessage.setNewComment(newCommentList);
 		classMessage.setOldComment(oldCommentList);
 
-		try {
 			ClassMessageDAO.insertOne(classMessage);
-		} catch (Exception e) {
-			System.out.println("insert class error." + project + ":" + commitId);
-		}
 
 	}
 
